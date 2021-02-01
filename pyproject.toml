@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "hexlet-code"
+version = "0.1.0"
+description = "Compare strucures"
+authors = ["Konstantin Freidlin <freidlinks@ya.ru>"]
+packages = [
+    { include = "gendiff"}
+]
+repository = "https://github.com/mnogom/python-project-lvl2"
+classifiers = [
+    "Topic :: Education",
+    "Topic :: Utilities",
+]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pytest = "^6.2.2"
+PyYAML = "^5.4.1"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^3.8.4"
+pytest = "^6.2.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+gendiff = "gendiff.script:main"
+
+# Add test repository source
+[[tool.poetry.source]]
+name = "testPypi"
+url = "https://test.pypi.org/legacy/"
+secondary = true
