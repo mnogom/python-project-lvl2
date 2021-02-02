@@ -3,13 +3,9 @@
 import json
 import yaml
 
-from gendiff.view import dict2str
+from gendiff.view import present_difference
 from gendiff.node_explorer import is_leaf, is_branch, have_key
-
-ADDED = "+"
-REMOVED = "-"
-UNCHANGED = " "
-KEY_TEMP = "{} {}"
+from gendiff.constants import ADDED, REMOVED, UNCHANGED, CHANGED, KEY_TEMP
 
 
 def _read_file(file_path: str) -> dict:
@@ -85,12 +81,13 @@ def _check_diff(data1: dict, data2: dict) -> dict:
     return difference
 
 
-def generate_diff(file_path1: str, file_path2: str):
+def generate_diff(file_path1: str, file_path2: str, style="stylish"):
     """Get difference between two json files.
     '+' - key, value added
     '-' - key, value removed
     '- ... / + ...' - value updated for key
 
+    :param style:
     :param file_path1: json file #1
     :param file_path2: json file #2
     :return: string with difference
@@ -100,5 +97,5 @@ def generate_diff(file_path1: str, file_path2: str):
     data2 = _read_file(file_path2)
     difference = _check_diff(data1, data2)
 
-    print(dict2str(difference, UNCHANGED))
-    return dict2str(difference, UNCHANGED)
+    print(present_difference(difference, style))
+    return present_difference(difference, style)

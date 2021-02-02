@@ -16,4 +16,5 @@ def parse():
                         default="plain")
 
     args = parser.parse_args()
+
     return args.first_file, args.second_file, args.FORMAT
