@@ -17,7 +17,7 @@ test:
 	poetry run pytest tests/tests.py -vv
 
 run-plain:
-	poetry run gendiff tests/fixtures/plain_json/file1.json tests/fixtures/plain_json/file2.json -f plain
+	poetry run gendiff tests/fixtures/plain_json/file1.json tests/fixtures/plain_json/file2.json -f stylish
 
 run-recur:
-	poetry run gendiff tests/fixtures/recursive_json/file1.json tests/fixtures/recursive_json/file2.json -f plain
+	poetry run gendiff tests/fixtures/recursive_json/file1.json tests/fixtures/recursive_json/file2.json -f stylish

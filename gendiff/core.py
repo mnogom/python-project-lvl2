@@ -3,9 +3,8 @@
 import json
 import yaml
 
-from gendiff.view import present_difference
 from gendiff.node_explorer import is_leaf, is_branch, have_key
-from gendiff.constants import ADDED, REMOVED, UNCHANGED, CHANGED, KEY_TEMP
+from gendiff.constants import ADDED, REMOVED, UNCHANGED, CHANGED
 
 
 def _read_file(file_path: str) -> dict:
@@ -30,31 +29,33 @@ def _read_file(file_path: str) -> dict:
 def _find_diff(key, node1, node2):
     """Find difference between two nodes."""
 
+    old_value = node1.get(key)
+    new_value = node2.get(key)
+
+    if is_branch(old_value) and is_branch(new_value):
+        status = UNCHANGED
+        return {key: [status, {}, _check_diff(old_value, new_value)]}
+
     if not have_key(key, node1):
-        new_key = KEY_TEMP.format(ADDED, key)
-        new_value = node2.get(key)
-        return {new_key: new_value}
+        old_value = None if is_leaf(new_value) else {}
+        status = ADDED
 
-    if not have_key(key, node2):
-        new_key = KEY_TEMP.format(REMOVED, key)
-        new_value = node1.get(key)
-        return {new_key: new_value}
+    elif not have_key(key, node2):
+        new_value = None if is_leaf(old_value) else {}
+        status = REMOVED
 
-    if node1.get(key) == node2.get(key):
-        new_key = KEY_TEMP.format(UNCHANGED, key)
-        new_value = node1.get(key)
-        return {new_key: new_value}
+    elif node1.get(key) == node2.get(key):
+        old_value = None
+        status = UNCHANGED
 
-    if is_leaf(node1.get(key)) or is_leaf(node2.get(key)):
-        new_key1 = KEY_TEMP.format(REMOVED, key)
-        new_key2 = KEY_TEMP.format(ADDED, key)
-        new_value1 = node1.get(key)
-        new_value2 = node2.get(key)
-        return {new_key1: new_value1,
-                new_key2: new_value2}
+    elif is_leaf(node1.get(key)) or is_leaf(node2.get(key)):
+        status = CHANGED
 
-    new_key = KEY_TEMP.format(UNCHANGED, key)
-    return {new_key: _check_diff(node1.get(key), node2.get(key))}
+    else:
+        raise SystemError((f"Don't understand key: {key}, "
+                           f"node1: {node1}, node2: {node2}"))
+
+    return {key: [status, old_value, new_value]}
 
 
 def _check_diff(data1: dict, data2: dict) -> dict:
@@ -65,18 +66,8 @@ def _check_diff(data1: dict, data2: dict) -> dict:
     keys_bag = sorted(list(keys1.union(keys2)))
 
     for key in keys_bag:
-
-        sub_node1 = data1.get(key)
-        sub_node2 = data2.get(key)
-
-        if is_leaf(data1.get(key)) or is_leaf(data2.get(key)):
-            difference.update(
-                _find_diff(key, data1, data2))
-
-        elif is_branch(sub_node1) and is_branch(sub_node2):
-            difference.update(
-                _find_diff(key, data1, data2)
-            )
+        difference.update(
+            _find_diff(key, data1, data2))
 
     return difference
 
@@ -97,5 +88,4 @@ def generate_diff(file_path1: str, file_path2: str, style="stylish"):
     data2 = _read_file(file_path2)
     difference = _check_diff(data1, data2)
 
-    print(present_difference(difference, style))
-    return present_difference(difference, style)
+    return difference

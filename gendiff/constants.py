@@ -14,4 +14,4 @@ KEY_TEMP = "{} {}"
 DICTIONARY = {True: "true",
               False: "false",
               None: "null"}
-INDENT = 2
+INDENT_LEN = 2
