@@ -1,85 +1,90 @@
 """Module to create several representation."""
 
 from gendiff.node_explorer import is_leaf, is_branch
-from gendiff.constants import ADDED, REMOVED, CHANGED, UNCHANGED, \
-    DICTIONARY
+from gendiff.constants import ADDED, REMOVED, CHANGED, UNCHANGED
+from gendiff.format.diff_explorer import get_name, get_status, \
+    get_new_value, get_old_value, get_children, \
+    is_parsed_child, is_parsed_parent, convert_value
+
+PARENT_TEMP = "{indent}{status} {name}: {{\n{children}\n{indent}  }}"
+CHILD_TEMP = "{indent}{status} {name}: {value}"
 
 
-def _convert_value(value):
-    """Check json signature of True/False/None"""
-
-    if is_leaf(value):
-        return DICTIONARY.get(value, str(value))
-    return value
+def _remove_root(string: str) -> str:
+    return "\n".join(row[2:] for row in string[6:].split("\n"))
 
 
-def _get_status(pack):
-    """Get status of node."""
+def view(diff):
+    """Function to render difference between two files.
 
-    return pack[0] if isinstance(pack, list) else UNCHANGED
+    :param diff: difference between files
+    :return: formatted string
+    """
 
+    # TODO: Make function more simple
+    def inner(data, indent_len):
 
-def _get_old_value(pack):
-    """Get old value of node."""
+        if is_parsed_parent(data):
+            children_string = "\n".join([inner(child, indent_len + 4)
+                                         for child in get_children(data)])
+            parent_string = PARENT_TEMP.format(indent=" " * indent_len,
+                                               status=get_status(data),
+                                               name=get_name(data),
+                                               children=children_string)
+            return parent_string
 
-    return pack[1] if isinstance(pack, list) else pack
+        if is_parsed_child(data):
+            status = get_status(data)
+            if status == ADDED or status == UNCHANGED:
+                value = get_new_value(data)
+                value_string = inner(value, indent_len + 4)
+                child_string = CHILD_TEMP.format(indent=" " * indent_len,
+                                                 status=get_status(data),
+                                                 name=get_name(data),
+                                                 value=value_string)
+                return child_string.rstrip(" ")
+            if status == REMOVED:
+                value = get_old_value(data)
+                value_string = inner(value, indent_len + 4)
+                child_string = CHILD_TEMP.format(indent=" " * indent_len,
+                                                 status=get_status(data),
+                                                 name=get_name(data),
+                                                 value=value_string)
+                return child_string.rstrip(" ")
+            if status == CHANGED:
+                old_value = get_old_value(data)
+                new_value = get_new_value(data)
+                old_value_string = inner(old_value, indent_len + 4)
+                new_value_string = inner(new_value, indent_len + 4)
+                child_string_1 = CHILD_TEMP.format(indent=" " * indent_len,
+                                                   status=REMOVED,
+                                                   name=get_name(data),
+                                                   value=old_value_string)
+                child_string_2 = CHILD_TEMP.format(indent=" " * indent_len,
+                                                   status=ADDED,
+                                                   name=get_name(data),
+                                                   value=new_value_string)
+                return "{}\n{}".format(child_string_1.rstrip(" "),
+                                       child_string_2.rstrip(" "))
 
+            raise KeyError(f"data '{data}' is parsed child but don't"
+                           f"understand how to work with it")
 
-def _get_new_value(pack):
-    """Get new value of node."""
+        if is_leaf(data):
+            value_string = convert_value(data)
+            return value_string
 
-    return pack[2] if isinstance(pack, list) else pack
+        if is_branch(data):
+            values_string = "{\n"
+            for key, value in data.items():
+                value_string = inner(value, indent_len + 4)
+                values_string += CHILD_TEMP.format(indent=" " * indent_len,
+                                                   status=UNCHANGED,
+                                                   name=key,
+                                                   value=value_string) + "\n"
+            values_string += " " * (indent_len - 2) + "}"
+            return values_string
 
+        raise KeyError(f"data '{data}' is not parsed or leaf or branch.")
 
-def _get_string(indent, status, key, value=None):
-    """Make stylish string"""
-
-    if is_leaf(value):
-        string = "{}{} {}: {}".format(" " * indent,
-                                      status,
-                                      key,
-                                      _convert_value(value))
-        return string.rstrip(" ") + "\n"
-
-    elif is_branch(value):
-        string = ""
-        string += "{}{} {}: ".format(" " * indent,
-                                     status,
-                                     key)
-        string += _difference2stylish(value, indent + 4)
-        return string
-
-    else:
-        raise TypeError(f"Value '{value}' is not branch or leaf.")
-
-
-def _difference2stylish(data: dict, indent=2):
-
-    output = "{\n"
-
-    for key, sub_node in data.items():
-
-        status = _get_status(sub_node)
-
-        if status == CHANGED:
-            value = _get_old_value(sub_node)
-            output += _get_string(indent, REMOVED, key, value)
-            value = _get_new_value(sub_node)
-            output += _get_string(indent, ADDED, key, value)
-        elif status == ADDED or status == UNCHANGED:
-            value = _get_new_value(sub_node)
-            output += _get_string(indent, status, key, value)
-        elif status == REMOVED:
-            value = _get_old_value(sub_node)
-            output += _get_string(indent, status, key, value)
-        else:
-            raise KeyError(f"status: '{status}' is undefined")
-
-    output += " " * (indent - 2) + "}\n"
-    return output
-
-
-def view(data: dict) -> str:
-    """Present difference in format."""
-
-    return _difference2stylish(data)[:-1]
+    return _remove_root(inner(diff, 0))

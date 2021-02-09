@@ -11,7 +11,7 @@ CHANGED_TEXT = "Property '{}' was updated. From {} to {}\n"
 
 KEY_TEMP = "{} {}"
 
-DICTIONARY = {True: "true",
-              False: "false",
-              None: "null"}
+PYTH2JSON = {True: "true",
+             False: "false",
+             None: "null"}
 INDENT_LEN = 2

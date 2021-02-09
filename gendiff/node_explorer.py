@@ -1,19 +1,25 @@
-"""Module have predicates to explore nodes."""
+"""Module has predicates to explore nodes."""
 
 
 def is_leaf(node):
-    """Predicate to check if node is child."""
+    """Predicate to check if node is leaf."""
 
     return not is_branch(node)
 
 
 def is_branch(node):
-    """Predicate to check if node is parent."""
+    """Predicate to check if node is branch."""
 
     return isinstance(node, dict)
 
 
-def have_key(key, node):
+def has_key(key, node):
     """Predicate to check if node have selected key."""
 
     return key in node.keys()
+
+
+def have_child(node):
+    """Predicate to check if node have child."""
+
+    return isinstance(node, dict)
