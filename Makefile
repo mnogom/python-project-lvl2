@@ -12,12 +12,29 @@ package-install:
 
 lint:
 	poetry run flake8 gendiff
+	poetry run flake8 tests
 
 test:
-	poetry run pytest tests/tests.py -vv
+	poetry run pytest tests/test_diff.py -vv
 
-run-plain:
-	poetry run gendiff tests/fixtures/plain_json/file1.json tests/fixtures/plain_json/file2.json -f stylish
+coverage:
+	poetry run coverage run --source=gendiff -m pytest tests
+	poetry run coverage xml
 
-run-recur:
-	poetry run gendiff tests/fixtures/recursive_json/file1.json tests/fixtures/recursive_json/file2.json -f stylish
+run-plain-stylish:
+	poetry run gendiff tests/fixtures/inputs/plain_json/file1.json tests/fixtures/inputs/plain_json/file2.json -f stylish
+
+run-recur-stylish:
+	poetry run gendiff tests/fixtures/inputs/recursive_json/file1.json tests/fixtures/inputs/recursive_json/file2.json -f stylish
+
+run-plain-plain:
+	poetry run gendiff tests/fixtures/inputs/plain_json/file1.json tests/fixtures/inputs/plain_json/file2.json -f plain
+
+run-recur-plain:
+	poetry run gendiff tests/fixtures/inputs/recursive_json/file1.json tests/fixtures/inputs/recursive_json/file2.json -f plain
+
+run-plain-json:
+	poetry run gendiff tests/fixtures/inputs/plain_json/file1.json tests/fixtures/inputs/plain_json/file2.json -f json
+
+run-recur-json:
+	poetry run gendiff tests/fixtures/inputs/recursive_json/file1.json tests/fixtures/inputs/recursive_json/file2.json -f json
