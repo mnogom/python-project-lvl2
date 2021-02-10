@@ -4,15 +4,14 @@
 
 from gendiff.cli import parse
 from gendiff.core import generate_diff
-from gendiff.format import stylish
 
 
 def main():
     """Function to start script."""
 
     first_file, second_file, style = parse()
-    difference = generate_diff(first_file, second_file, style)
-    print(stylish.view(difference))
+    diff = generate_diff(first_file, second_file, formatter=style)
+    print(diff)
 
 
 if __name__ == "__main__":

@@ -14,12 +14,12 @@ def is_branch(node):
 
 
 def has_key(key, node):
-    """Predicate to check if node have selected key."""
+    """Predicate to check if node has selected key."""
 
     return key in node.keys()
 
 
-def have_child(node):
-    """Predicate to check if node have child."""
+def has_children(node):
+    """Predicate to check if node has children."""
 
     return isinstance(node, dict)

@@ -1,4 +1,4 @@
-"""Module to create several representation."""
+"""Module to make stylish representation."""
 
 from gendiff.node_explorer import is_leaf, is_branch
 from gendiff.constants import ADDED, REMOVED, CHANGED, UNCHANGED
@@ -14,19 +14,19 @@ def _remove_root(string: str) -> str:
     return "\n".join(row[2:] for row in string[6:].split("\n"))
 
 
-def view(diff):
-    """Function to render difference between two files.
+def view(diff):  # noqa: C901
+    """Function to render difference between two files in stylish format.
 
     :param diff: difference between files
     :return: formatted string
     """
 
-    # TODO: Make function more simple
+    # TODO: Make function more simple [?-1]
     def inner(data, indent_len):
 
         if is_parsed_parent(data):
-            children_string = "\n".join([inner(child, indent_len + 4)
-                                         for child in get_children(data)])
+            children_string = "\n".join(inner(child, indent_len + 4)
+                                        for child in get_children(data))
             parent_string = PARENT_TEMP.format(indent=" " * indent_len,
                                                status=get_status(data),
                                                name=get_name(data),
@@ -42,7 +42,7 @@ def view(diff):
                                                  status=get_status(data),
                                                  name=get_name(data),
                                                  value=value_string)
-                return child_string.rstrip(" ")
+                return child_string
             if status == REMOVED:
                 value = get_old_value(data)
                 value_string = inner(value, indent_len + 4)
@@ -50,7 +50,7 @@ def view(diff):
                                                  status=get_status(data),
                                                  name=get_name(data),
                                                  value=value_string)
-                return child_string.rstrip(" ")
+                return child_string
             if status == CHANGED:
                 old_value = get_old_value(data)
                 new_value = get_new_value(data)
@@ -64,8 +64,8 @@ def view(diff):
                                                    status=ADDED,
                                                    name=get_name(data),
                                                    value=new_value_string)
-                return "{}\n{}".format(child_string_1.rstrip(" "),
-                                       child_string_2.rstrip(" "))
+                return "{}\n{}".format(child_string_1,
+                                       child_string_2)
 
             raise KeyError(f"data '{data}' is parsed child but don't"
                            f"understand how to work with it")
@@ -87,4 +87,4 @@ def view(diff):
 
         raise KeyError(f"data '{data}' is not parsed or leaf or branch.")
 
-    return _remove_root(inner(diff, 0))
+    return _remove_root(inner(diff, indent_len=0))
