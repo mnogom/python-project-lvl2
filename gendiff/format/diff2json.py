@@ -1,3 +1,5 @@
+"""Module to make json representation."""
+
 import json
 
 from gendiff.format.diff_explorer import get_children

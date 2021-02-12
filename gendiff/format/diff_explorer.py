@@ -1,6 +1,7 @@
 """Module has base functions to parse difference. Difference is structure
-of data (list) if core found difference in input dictionaries and another
-type if there are no difference."""
+of data (list) if core found difference. Data can be parent (has key 'children')
+or child (has keys 'old_value' and 'new_value'). Values (old and new) can be
+leaf (value) or branch (dict)."""
 
 from gendiff.constants import PYTH2JSON
 

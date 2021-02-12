@@ -92,7 +92,7 @@ def _find_diff(data1: dict, data2: dict) -> list:
 
 
 def generate_diff(file_path1: str, file_path2: str, formatter="stylish"):
-    """Get difference between two json files and returns formatted string
+    """Get difference between two json files and returns formatted string.
 
     :param formatter: ['stylish' | 'plain' | 'json']
     :param file_path1: json file #1

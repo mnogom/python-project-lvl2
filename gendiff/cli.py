@@ -1,4 +1,4 @@
-"""Module create console interface"""
+"""Module create console interface."""
 
 import argparse
 

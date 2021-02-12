@@ -1,3 +1,6 @@
+"""Module to run tests."""
+
+
 from gendiff import generate_diff
 
 

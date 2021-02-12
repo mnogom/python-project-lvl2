@@ -1,4 +1,5 @@
-"""Package for generate difference between files"""
+"""Package for generate difference between files."""
+
 from gendiff.core import generate_diff
 
 __all__ = [
