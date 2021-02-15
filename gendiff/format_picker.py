@@ -1,8 +1,8 @@
 """Module to pick instructions for formatter."""
 
-from gendiff.formatters.as_json import json_view
-from gendiff.formatters.as_plain import plain_view
-from gendiff.formatters.as_stylish import stylish_view
+from gendiff.formatters.json import json_view
+from gendiff.formatters.plain import plain_view
+from gendiff.formatters.stylish import stylish_view
 
 
 def get_formatted_diff(diff: list, formatter: str) -> str:

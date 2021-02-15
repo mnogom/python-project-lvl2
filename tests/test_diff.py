@@ -1,5 +1,9 @@
 """Module to run tests."""
 
+# https://docs.pytest.org/en/stable/fixture.html - фикстуры
+# https://youtu.be/zsz8kdi62mE - писать тесты правильно
+
+
 import os
 
 import pytest
@@ -10,18 +14,11 @@ MAIN_PATH = os.path.join("tests", "fixtures")
 INPUT_PATH = "input"
 OUTPUT_PATH = "output"
 
-PLAIN_STRUCTURE = "plain"
-RECURSIVE_STRUCTURE = "recursive"
-JSON_FORMAT = "json"
-YML_FORMAT = "yml"
-PLAIN_FORMATTER = "plain"
-JSON_FORMATTER = "json"
-STYLISH_FORMATTER = "stylish"
-DEFAULT_FORMATTER = None
-
-STYLISH_OUT = "stylish"
-PLAIN_OUT = "plain"
-JSON_OUT = "json"
+PLAIN = "plain"
+RECURSIVE = "recursive"
+JSON = "json"
+YML = "yml"
+STYLISH = "stylish"
 
 
 def _get_input_data(input_structure, input_format):
@@ -37,7 +34,7 @@ def _get_input_data(input_structure, input_format):
 
 
 def _get_result(input_structure, output_style):
-    extension = "json" if output_style == JSON_FORMATTER else "txt"
+    extension = "json" if output_style == JSON else "txt"
     path = os.path.join(MAIN_PATH,
                         OUTPUT_PATH,
                         output_style,
@@ -46,28 +43,28 @@ def _get_result(input_structure, output_style):
         return file.read()
 
 
-@pytest.mark.parametrize("input_structure, input_format, formatter, output_style",
-                         [(PLAIN_STRUCTURE, JSON_FORMAT, DEFAULT_FORMATTER, STYLISH_OUT),
-                          (PLAIN_STRUCTURE, YML_FORMAT, DEFAULT_FORMATTER, STYLISH_OUT),
-                          (RECURSIVE_STRUCTURE, JSON_FORMAT, DEFAULT_FORMATTER, STYLISH_OUT),
-                          (RECURSIVE_STRUCTURE, YML_FORMAT, DEFAULT_FORMATTER, STYLISH_OUT),
-                          (PLAIN_STRUCTURE, JSON_FORMAT, STYLISH_FORMATTER, STYLISH_OUT),
-                          (PLAIN_STRUCTURE, YML_FORMAT, STYLISH_FORMATTER, STYLISH_OUT),
-                          (RECURSIVE_STRUCTURE, JSON_FORMAT, STYLISH_FORMATTER, STYLISH_OUT),
-                          (RECURSIVE_STRUCTURE, YML_FORMAT, STYLISH_FORMATTER, STYLISH_OUT),
-                          (PLAIN_STRUCTURE, JSON_FORMAT, PLAIN_FORMATTER, PLAIN_OUT),
-                          (PLAIN_STRUCTURE, YML_FORMAT, PLAIN_FORMATTER, PLAIN_OUT),
-                          (RECURSIVE_STRUCTURE, JSON_FORMAT, PLAIN_FORMATTER, PLAIN_OUT),
-                          (RECURSIVE_STRUCTURE, YML_FORMAT, PLAIN_FORMATTER, PLAIN_OUT),
-                          (PLAIN_STRUCTURE, JSON_FORMAT, JSON_FORMATTER, JSON_OUT),
-                          (PLAIN_STRUCTURE, YML_FORMAT, JSON_FORMATTER, JSON_OUT),
-                          (RECURSIVE_STRUCTURE, JSON_FORMAT, JSON_FORMATTER, JSON_OUT),
-                          (RECURSIVE_STRUCTURE, YML_FORMAT, JSON_FORMATTER, JSON_OUT)])
-def test_diff(input_structure, input_format, formatter, output_style):
-    file1, file2 = _get_input_data(input_structure, input_format)
-    result = _get_result(input_structure, output_style)
+@pytest.mark.parametrize("in_structure, in_format, formatter, out_style",
+                         [(PLAIN, JSON, None, STYLISH),
+                          (PLAIN, YML, None, STYLISH),
+                          (RECURSIVE, JSON, None, STYLISH),
+                          (RECURSIVE, YML, None, STYLISH),
+                          (PLAIN, JSON, STYLISH, STYLISH),
+                          (PLAIN, YML, STYLISH, STYLISH),
+                          (RECURSIVE, JSON, STYLISH, STYLISH),
+                          (RECURSIVE, YML, STYLISH, STYLISH),
+                          (PLAIN, JSON, PLAIN, PLAIN),
+                          (PLAIN, YML, PLAIN, PLAIN),
+                          (RECURSIVE, JSON, PLAIN, PLAIN),
+                          (RECURSIVE, YML, PLAIN, PLAIN),
+                          (PLAIN, JSON, JSON, JSON),
+                          (PLAIN, YML, JSON, JSON),
+                          (RECURSIVE, JSON, JSON, JSON),
+                          (RECURSIVE, YML, JSON, JSON)])
+def test_diff(in_structure, in_format, formatter, out_style):
+    file1, file2 = _get_input_data(in_structure, in_format)
+    result = _get_result(in_structure, out_style)
 
-    if formatter == DEFAULT_FORMATTER:
+    if formatter is None:
         assert generate_diff(file1, file2) == result
     else:
         assert generate_diff(file1, file2, formatter) == result

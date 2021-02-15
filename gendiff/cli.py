@@ -3,7 +3,7 @@
 import argparse
 
 
-def parse_user_input():
+def parse_args():
     """Parse input parameters
 
     :return: file paths and arguments

@@ -1,7 +1,7 @@
 """Module to make stylish representation."""
 
 from gendiff.gardener_tools import is_leaf, is_branch
-from gendiff.constants import ADDED, REMOVED, CHANGED, UNCHANGED
+from gendiff.gardener import ADDED, REMOVED, CHANGED, UNCHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
     is_parsed_child, is_parsed_parent, convert_value
@@ -21,7 +21,6 @@ def stylish_view(diff):  # noqa: C901
     :return: formatted string
     """
 
-    # TODO: Make function more simple [?-1]
     def inner(data, indent_len):
 
         if is_parsed_parent(data):

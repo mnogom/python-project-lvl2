@@ -1,6 +1,6 @@
 """Module to make plain representation."""
 
-from gendiff.constants import ADDED, REMOVED, CHANGED
+from gendiff.gardener import ADDED, REMOVED, CHANGED
 from gendiff.gardener_tools import is_branch
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
@@ -33,7 +33,6 @@ def plain_view(diff):  # noqa: C901
     :return: formatted string
     """
 
-    # TODO: Make function more simple [?-2]
     def inner(data, parent_name):
 
         if is_parsed_parent(data):

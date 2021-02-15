@@ -4,7 +4,12 @@ child (has keys 'old_value' and 'new_value'). Values (old and new) can be leaf
 (value) or branch (dict)."""
 
 from gendiff.gardener_tools import is_branch, has_key
-from gendiff.constants import ADDED, REMOVED, UNCHANGED, CHANGED
+
+
+ADDED = "+"
+REMOVED = "-"
+UNCHANGED = " "
+CHANGED = "~"
 
 
 def _get_keys_bag(branch1, branch2):
@@ -34,7 +39,7 @@ def _check_status(node1, node2, key) -> str:
                    f"node1: '{node1}' and node2: '{node2}'")
 
 
-def find_diff(data1: dict, data2: dict) -> list:
+def grow_diff_tree(data1: dict, data2: dict) -> list:
     """Find difference between two nodes. Works
     with branches (recursive) and for leaves (plain)
 
