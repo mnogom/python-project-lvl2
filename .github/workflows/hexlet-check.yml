@@ -43,6 +43,6 @@ jobs:
       - name: Upload coverage to Codecov
         uses: paambaati/codeclimate-action@v2.7.5
         env:
-          CC_TEST_REPORTER_ID: ef2d56bb5b64802cc03c845046e1fc81db9cf655eb558519fb4aa40e558a1860
+          CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
           coverageCommand: make coverage

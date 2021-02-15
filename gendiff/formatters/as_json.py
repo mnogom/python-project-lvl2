@@ -2,11 +2,11 @@
 
 import json
 
-from gendiff.format.diff_explorer import get_children
+from gendiff.formatters.diff_explorer import get_children
 
 
-def view(diff):
-    """Function to render difference between two files in JSON format.
+def json_view(diff):
+    """Function to render difference between two files in JSON formatters.
 
     :param diff: difference between files
     :return: formatted string

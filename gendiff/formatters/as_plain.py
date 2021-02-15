@@ -1,8 +1,8 @@
 """Module to make plain representation."""
 
 from gendiff.constants import ADDED, REMOVED, CHANGED
-from gendiff.node_explorer import is_branch
-from gendiff.format.diff_explorer import get_name, get_status, \
+from gendiff.gardener_tools import is_branch
+from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
     is_parsed_child, is_parsed_parent, convert_value
 
@@ -26,8 +26,8 @@ def _setup_value(value):
         else convert_value(value, strong=True)
 
 
-def view(diff):  # noqa: C901
-    """Function to render difference between two files in plain format.
+def plain_view(diff):  # noqa: C901
+    """Function to render difference between two files in plain formatters.
 
     :param diff: difference between files
     :return: formatted string

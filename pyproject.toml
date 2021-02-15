@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hexlet-code"
-version = "0.1.0"
-description = "Compare strucures"
+version = "0.1.1"
+description = "Compare structures"
 authors = ["Konstantin Freidlin <freidlinks@ya.ru>"]
 packages = [
     { include = "gendiff"}
@@ -20,14 +20,13 @@ PyYAML = "^5.4.1"
 flake8 = "^3.8.4"
 pytest = "^6.2.2"
 pytest-cov = "^2.11.1"
-coverage = "^5.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.scripts]
-gendiff = "gendiff.script:main"
+gendiff = "gendiff.scripts.gendiff:main"
 
 # Add test repository source
 [[tool.poetry.source]]

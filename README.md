@@ -7,6 +7,12 @@
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ae478a78f3f8b00d995c/test_coverage)](https://codeclimate.com/github/mnogom/python-project-lvl2/test_coverage)
 
 ---
+### Installation
+```commandline
+pip3 install --upgrade git+https://github.com/mnogom/python-project-lvl2.git
+```
+
+---
 ### Usage
 1. From command line
 ```commandline
@@ -41,6 +47,7 @@ output = gendiff.generate_diff("path/to/file1", "path/to/file2", style)
 *See examples below*
 
 ---
+### Examples
 #### Plain JSON @ Stylish format
 [![asciicast](https://asciinema.org/a/C2l9MVxQheGPdzy9pUaQSELit.svg?)](https://asciinema.org/a/C2l9MVxQheGPdzy9pUaQSELit)
 
@@ -53,11 +60,5 @@ output = gendiff.generate_diff("path/to/file1", "path/to/file2", style)
 #### Recursive JSON @ Plain format
 [![asciicast](https://asciinema.org/a/TW3TDGf5cCZr0sHH2mVMQHaas.svg?)](https://asciinema.org/a/TW3TDGf5cCZr0sHH2mVMQHaas)
 
-#### Recursive JSON @ Json format
+#### Recursive JSON @ JSON format
 [![asciicast](https://asciinema.org/a/xH7L7UVwh4kdmno2GAwTbBNZr.svg?)](https://asciinema.org/a/xH7L7UVwh4kdmno2GAwTbBNZr)
-
----
-### Installation
-```commandline
-pip3 install --upgrade git+https://github.com/mnogom/python-project-lvl2.git
-```

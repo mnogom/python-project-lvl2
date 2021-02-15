@@ -17,9 +17,3 @@ def has_key(key, node):
     """Predicate to check if node has selected key."""
 
     return key in node.keys()
-
-
-def has_children(node):
-    """Predicate to check if node has children."""
-
-    return isinstance(node, dict)
