@@ -4,7 +4,7 @@ import argparse
 
 
 def parse_args():
-    """Parse input parameters
+    """Parse input parameters.
 
     :return: file paths and arguments
     """

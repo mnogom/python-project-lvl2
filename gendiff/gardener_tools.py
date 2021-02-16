@@ -20,6 +20,6 @@ def has_key(key, node):
 
 
 def get_value(key, node):
-    """Return value from node ny key."""
+    """Return value from node by key."""
 
     return node.get(key)

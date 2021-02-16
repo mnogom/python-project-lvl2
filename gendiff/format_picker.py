@@ -5,15 +5,13 @@ from gendiff.formatters.plain import plain_view
 from gendiff.formatters.stylish import stylish_view
 
 
-def get_formatted_diff(diff: list, formatter: str, nude=False) -> str:  # TODO: remove nude
+def get_formatted_diff(diff: dict, formatter: str) -> str:
     """ Function to render difference between two files in picked format.
 
     :param diff: difference from gardener
     :param formatter: ['stylish' | 'plain' | 'json']
     :return:
     """
-    if nude:  # TODO: remove nude
-        return diff
 
     if formatter == "stylish":
         return stylish_view(diff)

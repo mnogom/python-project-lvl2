@@ -3,7 +3,7 @@
 from gendiff.gardener import ADDED, REMOVED, CHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
-    is_child, is_parent, convert_value, is_nested_value
+    is_child, is_parent, convert_value, is_complex_value
 
 ROW_TEMP = "Property '{path}' was {action}\n"
 ADDED_TEMP = "added with value: {value}"
@@ -20,8 +20,10 @@ def _remove_root(string: str) -> str:
 
 
 def _setup_value(value):
-    """Replace value with 'BRANCH_TEMP' if value is branch."""
-    return NESTED_TEMP if is_nested_value(value) \
+    """Replace value with 'BRANCH_TEMP' if value is complex or
+    just convert value"""
+
+    return NESTED_TEMP if is_complex_value(value) \
         else convert_value(value, strong=True)
 
 

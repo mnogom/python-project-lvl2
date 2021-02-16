@@ -15,7 +15,7 @@ def _read_file(file_path: str) -> (bytes, str):
         return file.read(), extension
 
 
-def generate_diff(file_path1: str, file_path2: str, formatter="stylish", nude=False):  # TODO: remove nude
+def generate_diff(file_path1: str, file_path2: str, formatter="stylish"):
     """Get difference between two json files and returns formatted string.
 
     :param formatter: ['stylish' | 'plain' | 'json']
@@ -29,5 +29,5 @@ def generate_diff(file_path1: str, file_path2: str, formatter="stylish", nude=Fa
     data1 = parse_file(file1, extension1)
     data2 = parse_file(file2, extension2)
     diff = grow_diff_tree(data1, data2)
-    formatted_diff = get_formatted_diff(diff, formatter, nude)  # TODO: remove nude
+    formatted_diff = get_formatted_diff(diff, formatter)
     return formatted_diff

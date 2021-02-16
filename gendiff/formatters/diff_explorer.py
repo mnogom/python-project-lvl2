@@ -51,22 +51,22 @@ def get_children(node: dict) -> list:
     raise KeyError(f"node '{node}' doesn't have any child.")
 
 
-def is_nested_value(value) -> bool:
-    """Check if value is nested object"""
+def is_complex_value(value) -> bool:
+    """Check if value is complex object."""
 
     return isinstance(value, dict)
 
 
 def convert_value(value, strong=False) -> str:
     """Convert value to JSON signature.
-    With 'strong=True' all strings will be print with (')"""
+    With 'strong=True' all strings will be print with (')."""
 
-    pyth2json = {True: "true",
-                 False: "false",
-                 None: "null"}
+    python2json = {True: "true",
+                   False: "false",
+                   None: "null"}
 
     if isinstance(value, bool) or value is None:
-        return pyth2json[value]
+        return python2json[value]
     if isinstance(value, str) and strong:
         return f"'{value}'"
     return f"{value}"

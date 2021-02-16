@@ -1,7 +1,4 @@
-"""Module to find difference between two input trees. Difference is structure of
-data (list) if core found difference. Data can be parent (has key 'children') or
-child (has keys 'old_value' and 'new_value'). Values (old and new) can be leaf
-(value) or branch (dict)."""
+"""Module to find difference between two input trees."""
 
 from gendiff.gardener_tools import is_branch, has_key, get_value
 
@@ -26,9 +23,11 @@ def _check_status(node1, node2, key) -> str:
     """
 
     if has_key(key, node1) and has_key(key, node2):
-        if is_branch(get_value(key, node1)) and is_branch(get_value(key, node2)):
+        sub_node1 = get_value(key, node1)
+        sub_node2 = get_value(key, node2)
+        if is_branch(sub_node1) and is_branch(sub_node2):
             return UNCHANGED
-        if get_value(key, node1) == get_value(key, node2):
+        if sub_node1 == sub_node2:
             return UNCHANGED
         return CHANGED
     if has_key(key, node1):
@@ -41,7 +40,7 @@ def _check_status(node1, node2, key) -> str:
 
 def grow_diff_tree(data1: dict, data2: dict) -> dict:
     """Find difference between two nodes. Works
-    with branches (recursive) and for leaves (plain)
+    with branches (recursive) and for leaves (plain).
 
     :param data1: node #1
     :param data2: node #2

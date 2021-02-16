@@ -1,10 +1,9 @@
 """Module to make stylish representation."""
 
-from gendiff.gardener_tools import is_leaf, is_branch
 from gendiff.gardener import ADDED, REMOVED, CHANGED, UNCHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
-    is_child, is_parent, convert_value, is_nested_value
+    is_child, is_parent, convert_value, is_complex_value
 
 PARENT_TEMP = "{indent}{status} {name}: {{\n{children}\n{indent}  }}"
 CHILD_TEMP = "{indent}{status} {name}: {value}"
@@ -15,15 +14,15 @@ def _remove_root(string: str) -> str:
 
 
 def _setup_value(value, indent_len=0) -> str:
-    if is_nested_value(value):
-        nested_value_string = "{\n"
+    if is_complex_value(value):
+        complex_value_string = "{\n"
         for key, value in value.items():
             value_string = _setup_value(value, indent_len + 4)
-            nested_value_string += CHILD_TEMP.format(indent=" " * indent_len,
-                                                     status=UNCHANGED,
-                                                     name=key,
-                                                     value=value_string) + "\n"
-        return nested_value_string + " " * (indent_len - 2) + "}"
+            complex_value_string += CHILD_TEMP.format(indent=" " * indent_len,
+                                                      status=UNCHANGED,
+                                                      name=key,
+                                                      value=value_string) + "\n"
+        return complex_value_string + " " * (indent_len - 2) + "}"
     return convert_value(value)
 
 
@@ -79,9 +78,9 @@ def stylish_view(diff):  # noqa: C901
                 return "{}\n{}".format(child_string_1,
                                        child_string_2)
 
-            raise KeyError(f"node '{node}' is parsed child but don't"
-                           f"understand how to work with it")
+            raise KeyError(f"node '{node}' is leaf but don't"
+                           f"understand how to work with it's status")
 
-        raise KeyError(f"node '{node}' is not parsed or leaf or branch.")
+        raise KeyError(f"node '{node}' is not leaf or branch.")
 
     return _remove_root(inner(diff, indent_len=0))
