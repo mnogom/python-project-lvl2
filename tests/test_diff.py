@@ -1,10 +1,7 @@
 """Module to run tests."""
 
-# https://docs.pytest.org/en/stable/fixture.html - фикстуры
-# https://youtu.be/zsz8kdi62mE - писать тесты правильно
-
-
 import os
+import json
 
 import pytest
 
@@ -61,10 +58,17 @@ def _get_result(input_structure, output_style):
                           (RECURSIVE, JSON, JSON, JSON),
                           (RECURSIVE, YML, JSON, JSON)])
 def test_diff(in_structure, in_format, formatter, out_style):
+    """Tests for function 'generate_diff'. For JSON-Formatter function
+    works with dictionaries and with strings otherwise"""
+
     file1, file2 = _get_input_data(in_structure, in_format)
     result = _get_result(in_structure, out_style)
 
     if formatter is None:
         assert generate_diff(file1, file2) == result
+    elif formatter == JSON:
+        assert json.loads(generate_diff(file1,
+                                        file2,
+                                        formatter)) == json.loads(result)
     else:
         assert generate_diff(file1, file2, formatter) == result

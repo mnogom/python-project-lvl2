@@ -1,6 +1,5 @@
 """Module to make stylish representation."""
 
-from gendiff.gardener_tools import is_leaf, is_branch
 from gendiff.gardener import ADDED, REMOVED, CHANGED, UNCHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \

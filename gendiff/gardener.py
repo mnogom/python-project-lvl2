@@ -26,9 +26,11 @@ def _check_status(node1, node2, key) -> str:
     """
 
     if has_key(key, node1) and has_key(key, node2):
-        if is_branch(get_value(key, node1)) and is_branch(get_value(key, node2)):
+        sub_node1 = get_value(key, node1)
+        sub_node2 = get_value(key, node2)
+        if is_branch(sub_node1) and is_branch(sub_node2):
             return UNCHANGED
-        if get_value(key, node1) == get_value(key, node2):
+        if sub_node1 == sub_node2:
             return UNCHANGED
         return CHANGED
     if has_key(key, node1):

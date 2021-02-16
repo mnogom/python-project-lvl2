@@ -61,4 +61,4 @@ output = gendiff.generate_diff("path/to/file1", "path/to/file2", style)
 [![asciicast](https://asciinema.org/a/TW3TDGf5cCZr0sHH2mVMQHaas.svg?)](https://asciinema.org/a/TW3TDGf5cCZr0sHH2mVMQHaas)
 
 #### Recursive JSON @ JSON format
-[![asciicast](https://asciinema.org/a/xH7L7UVwh4kdmno2GAwTbBNZr.svg?)](https://asciinema.org/a/xH7L7UVwh4kdmno2GAwTbBNZr)
+[![asciicast](https://asciinema.org/a/rwCWjWP7tpr0srJpjuO3NPyrj.svg?)](https://asciinema.org/a/rwCWjWP7tpr0srJpjuO3NPyrj)
