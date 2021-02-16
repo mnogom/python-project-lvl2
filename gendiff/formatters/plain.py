@@ -1,16 +1,15 @@
 """Module to make plain representation."""
 
 from gendiff.gardener import ADDED, REMOVED, CHANGED
-from gendiff.gardener_tools import is_branch
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
-    is_parsed_child, is_parsed_parent, convert_value
+    is_child, is_parent, convert_value, is_nested_value
 
 ROW_TEMP = "Property '{path}' was {action}\n"
 ADDED_TEMP = "added with value: {value}"
 REMOVED_TEMP = "removed"
 CHANGED_TEMP = "updated. From {old_value} to {new_value}"
-BRANCH_TEMP = "[complex value]"
+NESTED_TEMP = "[complex value]"
 
 
 def _remove_root(string: str) -> str:
@@ -22,7 +21,7 @@ def _remove_root(string: str) -> str:
 
 def _setup_value(value):
     """Replace value with 'BRANCH_TEMP' if value is branch."""
-    return BRANCH_TEMP if is_branch(value) \
+    return NESTED_TEMP if is_nested_value(value) \
         else convert_value(value, strong=True)
 
 
@@ -35,13 +34,13 @@ def plain_view(diff):  # noqa: C901
 
     def inner(data, parent_name):
 
-        if is_parsed_parent(data):
+        if is_parent(data):
             return "".join(
                 inner(child, parent_name + "." + get_name(child))
                 for child in get_children(data)
             )
 
-        if is_parsed_child(data):
+        if is_child(data):
 
             status = get_status(data)
             old_value = _setup_value(get_old_value(data))

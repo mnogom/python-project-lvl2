@@ -3,7 +3,7 @@ data (list) if core found difference. Data can be parent (has key 'children') or
 child (has keys 'old_value' and 'new_value'). Values (old and new) can be leaf
 (value) or branch (dict)."""
 
-from gendiff.gardener_tools import is_branch, has_key
+from gendiff.gardener_tools import is_branch, has_key, get_value
 
 
 ADDED = "+"
@@ -26,9 +26,9 @@ def _check_status(node1, node2, key) -> str:
     """
 
     if has_key(key, node1) and has_key(key, node2):
-        if is_branch(node1.get(key)) and is_branch(node2.get(key)):
+        if is_branch(get_value(key, node1)) and is_branch(get_value(key, node2)):
             return UNCHANGED
-        if node1.get(key) == node2.get(key):
+        if get_value(key, node1) == get_value(key, node2):
             return UNCHANGED
         return CHANGED
     if has_key(key, node1):
@@ -39,7 +39,7 @@ def _check_status(node1, node2, key) -> str:
                    f"node1: '{node1}' and node2: '{node2}'")
 
 
-def grow_diff_tree(data1: dict, data2: dict) -> list:
+def grow_diff_tree(data1: dict, data2: dict) -> dict:
     """Find difference between two nodes. Works
     with branches (recursive) and for leaves (plain)
 
@@ -48,29 +48,29 @@ def grow_diff_tree(data1: dict, data2: dict) -> list:
     :return: difference between two nodes
     """
 
-    def inner(parent_key, node1, node2, status) -> list:
+    def inner(parent_key, node1, node2, status) -> dict:
 
         if is_branch(node1) and is_branch(node2):
             key_bag = _get_keys_bag(node1, node2)
 
-            return [{
+            return {
                 "name": parent_key,
                 "status": status,
                 "children": [
                     inner(key,
-                          node1.get(key),
-                          node2.get(key),
+                          get_value(key, node1),
+                          get_value(key, node2),
                           _check_status(node1, node2, key))
                     for key in key_bag
                 ]
-            }]
+            }
 
-        return [{
+        return {
             "name": parent_key,
             "status": status,
             "old_value": node1,
             "new_value": node2
-        }]
+        }
 
     root_name = "root"
     root_status = UNCHANGED

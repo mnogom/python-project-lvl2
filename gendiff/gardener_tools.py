@@ -17,3 +17,9 @@ def has_key(key, node):
     """Predicate to check if node has selected key."""
 
     return key in node.keys()
+
+
+def get_value(key, node):
+    """Return value from node ny key."""
+
+    return node.get(key)
