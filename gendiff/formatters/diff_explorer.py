@@ -2,27 +2,25 @@
 
 
 def is_parent(node: dict) -> bool:
-    """Predicate to check if data was parsed and
-    has children."""
+    """Predicate to check if node."""
 
     return "children" in node.keys()
 
 
 def is_child(node: dict) -> bool:
-    """Predicate to check if data was parsed and
-    is children."""
+    """Predicate to check node is child."""
 
     return not is_parent(node)
 
 
 def get_name(node: dict) -> str:
-    """Get name of node from data."""
+    """Get name of node."""
 
     return node["name"]
 
 
 def get_old_value(node: dict) -> str:
-    """Get old value of node from data."""
+    """Get old value of node."""
 
     if is_child(node):
         return node["old_value"]
@@ -30,7 +28,7 @@ def get_old_value(node: dict) -> str:
 
 
 def get_new_value(node: dict) -> str:
-    """Get new value of node from data."""
+    """Get new value of node."""
 
     if is_child(node):
         return node["new_value"]
@@ -38,13 +36,13 @@ def get_new_value(node: dict) -> str:
 
 
 def get_status(node: dict) -> str:
-    """Get status of node from data."""
+    """Get status of node."""
 
     return node["status"]
 
 
 def get_children(node: dict) -> list:
-    """Get children of node from data."""
+    """Get children of node."""
 
     if is_parent(node):
         return node["children"]

@@ -13,9 +13,9 @@ def parse_file(file: bytes, extension: str) -> dict:
     :return: dictionary from json file
     """
 
-    if extension == "json":
+    if extension == ".json":
         return json.loads(file)
-    if extension in ("yaml", "yml"):
+    if extension in (".yaml", ".yml"):
         return yaml.safe_load(file)
 
     raise TypeError((f"Don't know what to do with "

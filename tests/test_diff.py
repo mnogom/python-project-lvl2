@@ -19,23 +19,20 @@ STYLISH = "stylish"
 
 
 def _get_input_data(input_structure, input_format):
-    paths = []
-    for index in [1, 2]:
-        paths.append(
-            os.path.join(MAIN_PATH,
-                         INPUT_PATH,
-                         f"{input_structure}_{input_format}",
-                         f"file{index}.{input_format}")
-        )
+    paths = [os.path.join(MAIN_PATH,
+                          INPUT_PATH,
+                          f"{input_structure}_{input_format}",
+                          f"file{index}.{input_format}")
+             for index in [1, 2]]
     return paths
 
 
 def _get_result(input_structure, output_style):
-    extension = "json" if output_style == JSON else "txt"
+    extension = ".json" if output_style == JSON else ".txt"
     path = os.path.join(MAIN_PATH,
                         OUTPUT_PATH,
                         output_style,
-                        f"{input_structure}_result.{extension}")
+                        f"{input_structure}_result{extension}")
     with open(path, "r") as file:
         return file.read()
 

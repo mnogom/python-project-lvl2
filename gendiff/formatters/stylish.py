@@ -1,9 +1,9 @@
 """Module to make stylish representation."""
 
-from gendiff.gardener import ADDED, REMOVED, CHANGED, UNCHANGED
+from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
-    is_child, is_parent, convert_value, is_complex_value
+    is_child, is_parent, convert_value
 
 PARENT_TEMP = "{indent}{status} {name}: {{\n{children}\n{indent}  }}"
 CHILD_TEMP = "{indent}{status} {name}: {value}"
@@ -14,7 +14,7 @@ def _remove_root(string: str) -> str:
 
 
 def _setup_value(value, indent_len=0) -> str:
-    if is_complex_value(value):
+    if isinstance(value, dict):
         complex_value_string = "{\n"
         for key, value in value.items():
             value_string = _setup_value(value, indent_len + 4)

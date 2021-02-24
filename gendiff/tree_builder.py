@@ -1,16 +1,10 @@
 """Module to find difference between two input trees."""
 
-from gendiff.gardener_tools import is_branch, has_key, get_value
-
 
 ADDED = "+"
 REMOVED = "-"
 UNCHANGED = " "
 CHANGED = "~"
-
-
-def _get_keys_bag(branch1, branch2):
-    return sorted(list({*branch1.keys(), *branch2.keys()}))
 
 
 def _check_status(node1, node2, key) -> str:
@@ -22,23 +16,22 @@ def _check_status(node1, node2, key) -> str:
     :return: status
     """
 
-    if has_key(key, node1) and has_key(key, node2):
-        sub_node1 = get_value(key, node1)
-        sub_node2 = get_value(key, node2)
-        if is_branch(sub_node1) and is_branch(sub_node2):
-            return UNCHANGED
-        if sub_node1 == sub_node2:
+    if key in node1.keys() and key in node2.keys():
+        sub_node1 = node1.get(key)
+        sub_node2 = node2.get(key)
+        if (isinstance(sub_node1, dict) and isinstance(sub_node2, dict)) or \
+                (sub_node1 == sub_node2):
             return UNCHANGED
         return CHANGED
-    if has_key(key, node1):
+    if key in node1.keys():
         return REMOVED
-    if has_key(key, node2):
+    if key in node2.keys():
         return ADDED
     raise KeyError(f"Can't understand difference between"
                    f"node1: '{node1}' and node2: '{node2}'")
 
 
-def grow_diff_tree(data1: dict, data2: dict) -> dict:
+def get_diff_tree(data1: dict, data2: dict) -> dict:
     """Find difference between two nodes. Works
     with branches (recursive) and for leaves (plain).
 
@@ -49,16 +42,16 @@ def grow_diff_tree(data1: dict, data2: dict) -> dict:
 
     def inner(parent_key, node1, node2, status) -> dict:
 
-        if is_branch(node1) and is_branch(node2):
-            key_bag = _get_keys_bag(node1, node2)
+        if isinstance(node1, dict) and isinstance(node2, dict):
+            key_bag = sorted(list({*node1.keys(), *node2.keys()}))
 
             return {
                 "name": parent_key,
                 "status": status,
                 "children": [
                     inner(key,
-                          get_value(key, node1),
-                          get_value(key, node2),
+                          node1.get(key),
+                          node2.get(key),
                           _check_status(node1, node2, key))
                     for key in key_bag
                 ]

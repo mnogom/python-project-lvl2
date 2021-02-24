@@ -1,6 +1,6 @@
 """Module to make plain representation."""
 
-from gendiff.gardener import ADDED, REMOVED, CHANGED
+from gendiff.tree_builder import ADDED, REMOVED, CHANGED
 from gendiff.formatters.diff_explorer import get_name, get_status, \
     get_new_value, get_old_value, get_children, \
     is_child, is_parent, convert_value, is_complex_value
@@ -23,7 +23,7 @@ def _setup_value(value):
     """Replace value with 'BRANCH_TEMP' if value is complex or
     just convert value"""
 
-    return NESTED_TEMP if is_complex_value(value) \
+    return NESTED_TEMP if isinstance(value, dict) \
         else convert_value(value, strong=True)
 
 
