@@ -23,7 +23,7 @@ def _setup_value(value):
     """Replace value with 'BRANCH_TEMP' if value is complex or
     just convert value"""
 
-    return NESTED_TEMP if isinstance(value, dict) \
+    return NESTED_TEMP if is_complex_value(value) \
         else convert_value(value, strong=True)
 
 

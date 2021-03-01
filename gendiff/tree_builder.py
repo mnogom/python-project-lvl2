@@ -1,10 +1,10 @@
 """Module to find difference between two input trees."""
 
 
-ADDED = "+"
-REMOVED = "-"
-UNCHANGED = " "
-CHANGED = "~"
+ADDED = "ADDED"
+REMOVED = "REMOVED"
+UNCHANGED = "UNCHANGED"
+CHANGED = "CHANGED"
 
 
 def _check_status(node1, node2, key) -> str:
