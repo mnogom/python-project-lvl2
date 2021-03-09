@@ -1,39 +1,37 @@
 """Module to make stylish representation."""
 
 from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
-from gendiff.formatters.diff_explorer import get_name, get_status, \
-    get_new_value, get_old_value, get_children, \
-    is_child, is_parent, convert_value, is_complex_value
+
+
+ADDED_MARKER = "+"
+REMOVED_MARKER = "-"
+UNCHANGED_MARKER = " "
 
 PARENT_TEMP = "{indent}{status} {name}: {{\n{children}\n{indent}  }}"
 CHILD_TEMP = "{indent}{status} {name}: {value}"
 
 
-def _remove_root(string: str) -> str:
-    return "\n".join(row[2:] for row in string[6:].split("\n"))
+def _value_to_string(value, indent_len=0) -> str:
+    """Get converted to string value."""
 
-
-def _setup_value(value, indent_len=0) -> str:
-    if is_complex_value(value):
+    if isinstance(value, dict):
         complex_value_string = "{\n"
         for key, value in value.items():
-            value_string = _setup_value(value, indent_len + 4)
+            value_string = _value_to_string(value, indent_len + 4)
             complex_value_string += CHILD_TEMP.format(
                 indent=" " * indent_len,
-                status=_convert_status(UNCHANGED),
+                status=UNCHANGED_MARKER,
                 name=key,
                 value=value_string) + "\n"
         return complex_value_string + " " * (indent_len - 2) + "}"
-    return convert_value(value)
 
-
-def _convert_status(status):
-    if status == ADDED:
-        return "+"
-    if status == REMOVED:
-        return "-"
-    if status == UNCHANGED:
-        return " "
+    if value is True:
+        return "true"
+    if value is False:
+        return "false"
+    if value is None:
+        return "null"
+    return str(value)
 
 
 def stylish_view(diff):  # noqa: C901
@@ -43,59 +41,65 @@ def stylish_view(diff):  # noqa: C901
     :return: formatted string
     """
 
-    def inner(node, indent_len):
+    def inner(node, indent_len=0):
 
-        if is_parent(node):
+        if "children" in node.keys():
             children_string = "\n".join(inner(child, indent_len + 4)
-                                        for child in get_children(node))
+                                        for child in node["children"])
             parent_string = PARENT_TEMP.format(
                 indent=" " * indent_len,
-                status=_convert_status(get_status(node)),
-                name=get_name(node),
+                status=UNCHANGED_MARKER,
+                name=node["name"],
                 children=children_string)
             return parent_string
 
-        if is_child(node):
-            status = get_status(node)
-            if status == ADDED or status == UNCHANGED:
-                value = get_new_value(node)
-                value_string = _setup_value(value, indent_len + 4)
-                child_string = CHILD_TEMP.format(
-                    indent=" " * indent_len,
-                    status=_convert_status(get_status(node)),
-                    name=get_name(node),
-                    value=value_string)
-                return child_string
-            if status == REMOVED:
-                value = get_old_value(node)
-                value_string = _setup_value(value, indent_len + 4)
-                child_string = CHILD_TEMP.format(
-                    indent=" " * indent_len,
-                    status=_convert_status(get_status(node)),
-                    name=get_name(node),
-                    value=value_string)
-                return child_string
-            if status == CHANGED:
-                old_value = get_old_value(node)
-                new_value = get_new_value(node)
-                old_value_string = _setup_value(old_value, indent_len + 4)
-                new_value_string = _setup_value(new_value, indent_len + 4)
-                child_string_1 = CHILD_TEMP.format(
-                    indent=" " * indent_len,
-                    status=_convert_status(REMOVED),
-                    name=get_name(node),
-                    value=old_value_string)
-                child_string_2 = CHILD_TEMP.format(
-                    indent=" " * indent_len,
-                    status=_convert_status(ADDED),
-                    name=get_name(node),
-                    value=new_value_string)
-                return "{}\n{}".format(child_string_1,
-                                       child_string_2)
+        if node["status"] == UNCHANGED:
+            value = node["new_value"]
+            value_string = _value_to_string(value, indent_len + 4)
+            child_string = CHILD_TEMP.format(
+                indent=" " * indent_len,
+                status=UNCHANGED_MARKER,
+                name=node["name"],
+                value=value_string)
+            return child_string
 
-            raise KeyError(f"node '{node}' is leaf but don't"
-                           f"understand how to work with it's status")
+        if node["status"] == ADDED:
+            value = node["new_value"]
+            value_string = _value_to_string(value, indent_len + 4)
+            child_string = CHILD_TEMP.format(
+                indent=" " * indent_len,
+                status=ADDED_MARKER,
+                name=node["name"],
+                value=value_string)
+            return child_string
 
-        raise KeyError(f"node '{node}' is not leaf or branch.")
+        if node["status"] == REMOVED:
+            value = node["old_value"]
+            value_string = _value_to_string(value, indent_len + 4)
+            child_string = CHILD_TEMP.format(
+                indent=" " * indent_len,
+                status=REMOVED_MARKER,
+                name=node["name"],
+                value=value_string)
+            return child_string
 
-    return _remove_root(inner(diff, indent_len=0))
+        if node["status"] == CHANGED:
+            old_value = node["old_value"]
+            new_value = node["new_value"]
+            old_value_string = _value_to_string(old_value, indent_len + 4)
+            new_value_string = _value_to_string(new_value, indent_len + 4)
+            child_string_1 = CHILD_TEMP.format(
+                indent=" " * indent_len,
+                status=REMOVED_MARKER,
+                name=node["name"],
+                value=old_value_string)
+            child_string_2 = CHILD_TEMP.format(
+                indent=" " * indent_len,
+                status=ADDED_MARKER,
+                name=node["name"],
+                value=new_value_string)
+            return "{}\n{}".format(child_string_1,
+                                   child_string_2)
+
+    stylish_diff = inner(diff)
+    return "\n".join(row[2:] for row in stylish_diff[6:].split("\n"))
