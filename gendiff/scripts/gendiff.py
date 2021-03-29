@@ -1,16 +1,16 @@
 #!/usr/bin/env python3
 
-"""Module for running main script."""
+"""Entry point."""
 
 from gendiff import generate_diff
 from gendiff.cli import parse_args
 
 
 def main():
-    """Function to start script."""
+    """Parse arguments, run gendiff and print result."""
 
-    first_file, second_file, style = parse_args()
-    diff = generate_diff(first_file, second_file, formatter=style)
+    first_file, second_file, format = parse_args()
+    diff = generate_diff(first_file, second_file, format=format)
     print(diff)
 
 

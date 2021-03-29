@@ -1,22 +1,21 @@
-"""Module to parse input file."""
+"""File parser."""
 
 import json
 
 import yaml
 
 
-def parse_file(file: bytes, extension: str) -> dict:
-    """Read json or yml file and returns dictionary.
+def parse(data: bytes, extension: str) -> dict:
+    """Parse JSON or YAML data and returns dictionary.
 
-    :param file: *.json/*.yml file path
+    :param data: data from file
     :param extension:
-    :return: dictionary from json file
+    :return: dictionary from data
     """
 
     if extension == ".json":
-        return json.loads(file)
+        return json.loads(data)
     if extension in (".yaml", ".yml"):
-        return yaml.safe_load(file)
+        return yaml.safe_load(data)
 
-    raise TypeError((f"Don't know what to do with "
-                     f"'{extension}' file"))
+    raise TypeError(f"Unknown extension: {extension}")

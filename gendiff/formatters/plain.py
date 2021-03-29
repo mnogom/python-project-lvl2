@@ -1,20 +1,16 @@
-"""Module to make plain representation."""
+"""Plain formatter."""
 
 from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
 
 
 ROW_TEMP = "Property '{path}' was {action}\n"
-ADDED_TEMP = "added with value: {value}"
-REMOVED_TEMP = "removed"
-CHANGED_TEMP = "updated. From {old_value} to {new_value}"
-NESTED_TEMP = "[complex value]"
 
 
-def _value_to_string(value):
-    """Get converted to string value."""
+def _stringify(value):
+    """Convert value to string."""
 
     if isinstance(value, dict):
-        return NESTED_TEMP
+        return "[complex value]"
 
     if value is True:
         return "true"
@@ -24,11 +20,11 @@ def _value_to_string(value):
         return "null"
     if isinstance(value, str):
         return f"'{value}'"
-    return str(value)
+    return value
 
 
-def plain_view(diff):  # noqa: C901
-    """Function to render difference between two files in plain formatters.
+def plain_render(diff):  # noqa: C901
+    """Function to render diff in plain format.
 
     :param diff: difference between files
     :return: formatted string
@@ -42,20 +38,21 @@ def plain_view(diff):  # noqa: C901
                 for child in data["children"]
             )
         status = data["status"]
-        old_value = _value_to_string(data["old_value"])
-        new_value = _value_to_string(data["new_value"])
+        old_value = _stringify(data["old_value"])
+        new_value = _stringify(data["new_value"])
 
         if status == ADDED:
-            action_string = ADDED_TEMP.format(value=new_value)
+            action_string = "added with value: {value}".format(value=new_value)
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
         if status == REMOVED:
-            action_string = REMOVED_TEMP
+            action_string = "removed"
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
         if status == CHANGED:
-            action_string = CHANGED_TEMP.format(old_value=old_value,
-                                                new_value=new_value)
+            action_string = ("updated. From {old_value}"
+                             " to {new_value}").format(old_value=old_value,
+                                                       new_value=new_value)
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
 

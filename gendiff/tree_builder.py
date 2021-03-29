@@ -1,18 +1,17 @@
-"""Module to find difference between two input trees."""
+"""Diff tree builder."""
 
 
-ADDED = "ADDED"
-REMOVED = "REMOVED"
-UNCHANGED = "UNCHANGED"
-CHANGED = "CHANGED"
+ADDED = "added"
+REMOVED = "removed"
+UNCHANGED = "unchanged"
+CHANGED = "changed"
 
 
-def get_diff_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
-    """Find difference between two nodes. Works
-    with branches (recursive) and for leaves (plain).
+def build_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
+    """Build diff tree.
 
-    :param data1: node #1
-    :param data2: node #2
+    :param data1: data #1
+    :param data2: data #2
     :return: difference between two nodes
     """
 
@@ -24,14 +23,14 @@ def get_diff_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
             return {
                 "name": key,
                 "status": UNCHANGED,
-                "children": [
-                    inner(key,
-                          node1.get(key),
-                          node2.get(key),
-                          node1,
-                          node2)
-                    for key in key_bag
-                ]
+                "children": list(map(
+                    lambda _key: inner(_key,
+                                       node1.get(_key),
+                                       node2.get(_key),
+                                       node1,
+                                       node2),
+                    key_bag
+                ))
             }
 
         if key not in parent_node1.keys():

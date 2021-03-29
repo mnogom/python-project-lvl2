@@ -1,4 +1,4 @@
-"""Module to make stylish representation."""
+"""Stylish formatter."""
 
 from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
 
@@ -11,13 +11,13 @@ PARENT_TEMP = "{indent}{status} {name}: {{\n{children}\n{indent}  }}"
 CHILD_TEMP = "{indent}{status} {name}: {value}"
 
 
-def _value_to_string(value, indent_len=0) -> str:
-    """Get converted to string value."""
+def _stringify(value, indent_len=0) -> str:
+    """Convert value to string."""
 
     if isinstance(value, dict):
         complex_value_string = "{\n"
         for key, value in value.items():
-            value_string = _value_to_string(value, indent_len + 4)
+            value_string = _stringify(value, indent_len + 4)
             complex_value_string += CHILD_TEMP.format(
                 indent=" " * indent_len,
                 status=UNCHANGED_MARKER,
@@ -31,11 +31,11 @@ def _value_to_string(value, indent_len=0) -> str:
         return "false"
     if value is None:
         return "null"
-    return str(value)
+    return value
 
 
-def stylish_view(diff):  # noqa: C901
-    """Function to render difference between two files in stylish formatters.
+def stylish_render(diff):  # noqa: C901
+    """Function to render diff in stylish format.
 
     :param diff: difference between files
     :return: formatted string
@@ -55,7 +55,7 @@ def stylish_view(diff):  # noqa: C901
 
         if node["status"] == UNCHANGED:
             value = node["new_value"]
-            value_string = _value_to_string(value, indent_len + 4)
+            value_string = _stringify(value, indent_len + 4)
             child_string = CHILD_TEMP.format(
                 indent=" " * indent_len,
                 status=UNCHANGED_MARKER,
@@ -65,7 +65,7 @@ def stylish_view(diff):  # noqa: C901
 
         if node["status"] == ADDED:
             value = node["new_value"]
-            value_string = _value_to_string(value, indent_len + 4)
+            value_string = _stringify(value, indent_len + 4)
             child_string = CHILD_TEMP.format(
                 indent=" " * indent_len,
                 status=ADDED_MARKER,
@@ -75,7 +75,7 @@ def stylish_view(diff):  # noqa: C901
 
         if node["status"] == REMOVED:
             value = node["old_value"]
-            value_string = _value_to_string(value, indent_len + 4)
+            value_string = _stringify(value, indent_len + 4)
             child_string = CHILD_TEMP.format(
                 indent=" " * indent_len,
                 status=REMOVED_MARKER,
@@ -86,8 +86,8 @@ def stylish_view(diff):  # noqa: C901
         if node["status"] == CHANGED:
             old_value = node["old_value"]
             new_value = node["new_value"]
-            old_value_string = _value_to_string(old_value, indent_len + 4)
-            new_value_string = _value_to_string(new_value, indent_len + 4)
+            old_value_string = _stringify(old_value, indent_len + 4)
+            new_value_string = _stringify(new_value, indent_len + 4)
             child_string_1 = CHILD_TEMP.format(
                 indent=" " * indent_len,
                 status=REMOVED_MARKER,

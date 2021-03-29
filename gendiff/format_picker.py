@@ -1,23 +1,23 @@
-"""Module to pick instructions for formatter."""
+"""Format picker."""
 
-from gendiff.formatters.json import json_view
-from gendiff.formatters.plain import plain_view
-from gendiff.formatters.stylish import stylish_view
+from gendiff.formatters.json import json_render
+from gendiff.formatters.plain import plain_render
+from gendiff.formatters.stylish import stylish_render
 
 
-def get_formatted_diff(diff: dict, formatter: str) -> str:
-    """ Function to render difference between two files in picked format.
+def render_diff(diff: dict, format: str) -> str:
+    """Render difference between two files in picked format.
 
-    :param diff: difference from gardener
-    :param formatter: ['stylish' | 'plain' | 'json']
+    :param diff: difference between two files
+    :param format: ['stylish' | 'plain' | 'json']
     :return:
     """
 
-    if formatter == "stylish":
-        return stylish_view(diff)
-    if formatter == "plain":
-        return plain_view(diff)
-    if formatter == "json":
-        return json_view(diff)
+    if format == "stylish":
+        return stylish_render(diff)
+    if format == "plain":
+        return plain_render(diff)
+    if format == "json":
+        return json_render(diff)
 
-    raise KeyError(f"Don't know formatter '{formatter}'")
+    raise KeyError(f"Unknown format '{format}'")
