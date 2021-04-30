@@ -5,6 +5,7 @@ ADDED = "added"
 REMOVED = "removed"
 UNCHANGED = "unchanged"
 CHANGED = "changed"
+NESTED = "nested"
 
 
 def build_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
@@ -22,7 +23,7 @@ def build_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
 
             return {
                 "name": key,
-                "status": UNCHANGED,
+                "status": NESTED,
                 "children": list(map(
                     lambda _key: inner(_key,
                                        node1.get(_key),
@@ -33,7 +34,7 @@ def build_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
                 ))
             }
 
-        if key not in parent_node1.keys():
+        if key not in parent_node1:
             return {
                 "name": key,
                 "status": ADDED,
@@ -41,7 +42,7 @@ def build_tree(data1: dict, data2: dict) -> dict:  # noqa: C901
                 "new_value": node2
             }
 
-        if key not in parent_node2.keys():
+        if key not in parent_node2:
             return {
                 "name": key,
                 "status": REMOVED,

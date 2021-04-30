@@ -1,6 +1,6 @@
 """Stylish formatter."""
 
-from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
+from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
 
 ADDED_MARKER = "+"
@@ -43,7 +43,7 @@ def stylish_render(diff):  # noqa: C901
 
     def inner(node, indent_len=0):
 
-        if "children" in node.keys():
+        if node["status"] == NESTED:
             children_string = "\n".join(inner(child, indent_len + 4)
                                         for child in node["children"])
             parent_string = PARENT_TEMP.format(

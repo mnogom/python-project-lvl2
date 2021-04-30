@@ -1,6 +1,6 @@
 """Plain formatter."""
 
-from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED
+from gendiff.tree_builder import ADDED, REMOVED, CHANGED, UNCHANGED, NESTED
 
 
 ROW_TEMP = "Property '{path}' was {action}\n"
@@ -9,7 +9,10 @@ ROW_TEMP = "Property '{path}' was {action}\n"
 def _stringify(value):
     """Convert value to string."""
 
-    if isinstance(value, dict):
+    if isinstance(value, dict) or \
+            isinstance(value, tuple) or \
+            isinstance(value, list) or \
+            isinstance(value, set):
         return "[complex value]"
 
     if value is True:
@@ -30,33 +33,33 @@ def plain_render(diff):  # noqa: C901
     :return: formatted string
     """
 
-    def inner(data, parent_name):
+    def inner(node, parent_name):
 
-        if "children" in data.keys():
+        if node["status"] == NESTED:
             return "".join(
                 inner(child, parent_name + "." + child["name"])
-                for child in data["children"]
+                for child in node["children"]
             )
-        status = data["status"]
-        old_value = _stringify(data["old_value"])
-        new_value = _stringify(data["new_value"])
 
-        if status == ADDED:
+        old_value = _stringify(node["old_value"])
+        new_value = _stringify(node["new_value"])
+
+        if node["status"] == ADDED:
             action_string = "added with value: {value}".format(value=new_value)
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
-        if status == REMOVED:
+        if node["status"] == REMOVED:
             action_string = "removed"
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
-        if status == CHANGED:
+        if node["status"] == CHANGED:
             action_string = ("updated. From {old_value}"
                              " to {new_value}").format(old_value=old_value,
                                                        new_value=new_value)
             return ROW_TEMP.format(path=parent_name,
                                    action=action_string)
 
-        if status == UNCHANGED:
+        if node["status"] == UNCHANGED:
             return ""
 
     plain_diff = inner(diff, parent_name=diff["name"])[:-1]
