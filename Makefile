@@ -20,5 +20,5 @@ test:
 coverage:
 	poetry run pytest --cov=gendiff --cov-report xml tests
 
-run-plain-stylish:
-	poetry run gendiff tests/fixtures/inputs/plain_json/file1.json tests/fixtures/inputs/plain_json/file2.json -f stylish
+local-coverage:
+	poetry run pytest --cov=gendiff tests
