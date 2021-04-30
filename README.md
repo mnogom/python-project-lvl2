@@ -3,7 +3,7 @@
 ---
 ### Hexlet tests and linter status:
 [![python-ci](https://github.com/mnogom/python-project-lvl2/actions/workflows/python-ci.yml/badge.svg)](https://github.com/mnogom/python-project-lvl2/actions/workflows/python-ci.yml)
-[![Actions Status](https://github.com/mnogom/python-project-lvl2/workflows/hexlet-check/badge.svg)](https://github.com/mnogom/python-project-lvl2/actions)
+[![hexlet-check](https://github.com/mnogom/python-project-lvl2/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/mnogom/python-project-lvl2/actions/workflows/hexlet-check.yml)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ae478a78f3f8b00d995c/maintainability)](https://codeclimate.com/github/mnogom/python-project-lvl2/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/ae478a78f3f8b00d995c/test_coverage)](https://codeclimate.com/github/mnogom/python-project-lvl2/test_coverage)
 
